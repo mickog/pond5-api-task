@@ -1,15 +1,40 @@
-version: '3.1'
-
+version: '3'
 services:
+  api:
+    # Look for a Dockerfile at the the root
+    build: .
+    # <name> can be the project name, username, anything...
+    image: pond-api-task/item_api
+    depends_on:
+      - localstack
+
+    # Mapping port 3000 to the container's port 3000 since
+    # running `npm start` will start serverless offline on
+    # that port
+    ports:
+      - '3000:3000'
+
+    container_name: pond5_item_api
+    # These are the environment variables that are used by the api
+    environment:
+      # The name of the localstack container is host for dynamodb
+      AWS_ENDPOINT: 'http://dynamodb_localstack:8000'
+      AWS_REGION: 'us-west-2'
+      # leaving these blank will try and read from the terminal
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+  # Use the LocalStack image to run DynamoDb in a container
   localstack:
     image: localstack/localstack:latest
-    environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - EDGE_PORT=4566
-      - SERVICES=lambda,s3,cloudformation,sts,apigateway,iam,route53,dynamodb
+    # Using port 8000 to be consistent with dynamodb local jar
+    # port 8080 is the localstack management portal
     ports:
-      - '4566-4597:4566-4597'
-    volumes:
-      - "${TEMPDIR:-/tmp/localstack}:/temp/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - '8000:8000'
+      - '8080:8080'
+    container_name: dynamodb_localstack
 
+    # Only interested in running dynamodb and having it
+    # persist data when the container is stopped
+    environment:
+      SERVICES: dynamodb:8000
+      DATA_DIR: '/tmp/localstack/data'

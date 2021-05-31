@@ -1,0 +1,30 @@
+{
+  "name": "pond5-item-api",
+  "version": "1.0.0",
+  "description": "Items API",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mickog/pond5-api-task"
+  },
+  "author": "mickog",
+  "scripts": {
+    "sls": "serverless",
+    "seed": "node ./seed/runner.js",
+    "start": "sls offline start",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:v": "npm test -- --verbose",
+    "deploy": "serverless deploy --aws-profile serverless",
+    "package": "serverless package"
+  },
+  "engines": {
+    "node": "~14.17.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.694.0",
+    "jest": "^26.0.1",
+    "serverless": "^1.72.0",
+    "serverless-offline": "^6.4.0"
+  }
+}
