@@ -1,0 +1,9 @@
+{
+    "CloudFormation": "http:/host.docker.internal:4566",
+    "CloudWatch":"http://host.docker.internal:4566",
+    "Lambda": "http://host.docker.internal:4566",
+    "S3": "http://host.docker.internal:4566",
+    "APIGateway": "http://host.docker.internal:4566",
+    "Route53": "http://host.docker.internal:4566",
+    "DynamoDb": "http://host.docker.internal:4566"
+}

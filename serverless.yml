@@ -1,0 +1,91 @@
+service: pond5-api
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+  stage: local
+
+
+custom:
+  tableName: 'items-table-${self:provider.stage}'
+  environment:
+    ITEMS_TABLE: ${self:custom.tableName}
+    AWS_ACCESS_KEY_ID: 123
+    AWS_SECRET_ACCESS_KEY: 143
+    AWS_DEFAULT_REGION: us-east-1
+  localstack:
+    region: us-east-1
+    debug: true
+    stages:
+      - local
+    host: http://host.docker.internal
+#    host: http://localhost
+    endpointFile: localstack_endpoints.json
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource:
+          - { "Fn::GetAtt": [ "ItemsDynamoDBTable", "Arn" ] }
+
+functions:
+  create:
+    environment: ${self:custom.environment}
+    handler: handler.create
+    events:
+      - http:
+          path: items/create
+          method: post
+  get:
+    environment: ${self:custom.environment}
+    handler: handler.get
+    events:
+      - http:
+          path: items/get/{itemId}
+          method: get
+  all:
+    environment: ${self:custom.environment}
+    handler: handler.all
+    events:
+      - http:
+          path: items/all
+          method: get
+  update:
+    environment: ${self:custom.environment}
+    handler: handler.update
+    events:
+      - http:
+          path: items/update/{itemId}
+          method: put
+  delete:
+    environment: ${self:custom.environment}
+    handler: handler.delete
+    events:
+      - http:
+          path: items/delete/{itemId}
+          method: delete
+
+resources:
+    Resources:
+      itemsTable:
+        Type: AWS::DynamoDB::Table
+        Properties:
+          TableName: ${self:custom.tableName}
+          AttributeDefinitions:
+            - AttributeName: id
+              AttributeType: N
+          KeySchema:
+            - AttributeName: id
+              KeyType: HASH
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+
+plugins:
+  - serverless-localstack
