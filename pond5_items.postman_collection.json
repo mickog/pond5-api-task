@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "62083141-9abf-4b37-980a-95b6536227a4",
-		"name": "localstack",
+		"name": "pond5-items",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [

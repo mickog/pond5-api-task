@@ -6,8 +6,6 @@ services:
     image: pond5/items_api
     depends_on:
       - localstack
-    ports:
-      - '49160:3000'
     container_name: items_api
   localstack:
     image: localstack/localstack:latest

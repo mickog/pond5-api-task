@@ -11,5 +11,4 @@ COPY handler.py ./
 COPY dynamo.py ./
 COPY localstack_endpoints.json ./
 
-EXPOSE 3000
 CMD ["sls","deploy" ]
